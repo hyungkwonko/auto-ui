@@ -34,8 +34,6 @@ class DocumentBertScoringModel():
                 self.bert_batch_sizes.append(bert_batch_size)
         bert_batch_size_str = ",".join([str(item) for item in self.bert_batch_sizes])
 
-        print("prompt:%d, asap_essay_length:%d" % (self.prompt, asap_essay_lengths[self.prompt]))
-        print("chunk_sizes_str:%s, bert_batch_size_str:%s" % (chunk_sizes_str, bert_batch_size_str))
         self.bert_regression_by_word_document = DocumentBertCombineWordDocumentLinear.from_pretrained(
             self.args['bert_model_path'] + "/word_document",
             config=config
