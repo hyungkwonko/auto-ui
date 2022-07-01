@@ -100,5 +100,6 @@ class DocumentBertScoringModel():
         test_eva_res = evaluation(label_scores, prediction_scores)
         print("pearson:", float(test_eva_res[7]))
         print("qwk:", float(test_eva_res[8]))
+        print("test_eva_res: ", test_eva_res) ## HKKO
         return float(test_eva_res[7]), float(test_eva_res[8])
 
