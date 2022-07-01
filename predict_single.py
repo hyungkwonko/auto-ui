@@ -1,6 +1,7 @@
 import torch, configargparse
 from data import load_asap_data
-from model_architechure_bert_multi_scale_multi_loss import DocumentBertScoringModel
+from model_architechure_bert_multi_scale_multi_loss_single import DocumentBertScoringModel
+from random import randrange
 
 
 def _initialize_arguments(p: configargparse.ArgParser):
@@ -46,8 +47,14 @@ if __name__ == "__main__":
         test_documents.append(text)
         test_labels.append(label)
 
-    print("sample number:", len(test_documents), ", sample type:", type(test_documents))
-    print("label number:", len(test_labels), ", sample type:", type(test_labels))
+    rint = randrange(len(test_documents))
+    sample_docum = [test_documents[rint]]
+    sample_label = [test_labels[rint]]
+
+    print(f"sample document: {sample_docum}")
+    print(f"label label: {sample_label}")
 
     model = DocumentBertScoringModel(args=args)
-    model.predict_for_regress((test_documents, test_labels))
+    pred, answ = model.predict_for_regress((sample_docum, sample_label))
+
+    print(f"predicted result: {pred}, answer: {answ}")

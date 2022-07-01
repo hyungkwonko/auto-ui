@@ -49,7 +49,6 @@ class DocumentBertScoringModel():
         if isinstance(data, tuple) and len(data) == 2:
             document_representations_word_document, document_sequence_lengths_word_document = encode_documents(
                 data[0], self.bert_tokenizer, max_input_length=512)
-            # print(document_representations_word_document.shape)  # 144
             document_representations_chunk_list, document_sequence_lengths_chunk_list = [], []
             for i in range(len(self.chunk_sizes)):
                 document_representations_chunk, document_sequence_lengths_chunk = encode_documents(
@@ -59,9 +58,6 @@ class DocumentBertScoringModel():
                 document_representations_chunk_list.append(document_representations_chunk)
                 document_sequence_lengths_chunk_list.append(document_sequence_lengths_chunk)
             correct_output = torch.FloatTensor(data[1])
-            # print(document_representations_chunk.shape)  # torch.Size([144, 184, 3, 10])
-            # print(document_sequence_lengths_chunk.shape)  # torch.Size([144])
-            # print(correct_output.shape)  # torch.Size([144])
 
         self.bert_regression_by_word_document.to(device=self.args['device'])
         self.bert_regression_by_chunk.to(device=self.args['device'])
@@ -90,20 +86,7 @@ class DocumentBertScoringModel():
                 predictions[i:i + self.args['batch_size']] = batch_predictions_word_chunk_sentence_doc
         assert correct_output.shape == predictions.shape
 
-        prediction_scores = []
-        label_scores = []
-        predictions = predictions.cpu().numpy()
-        correct_output = correct_output.cpu().numpy()
-        outfile = open(os.path.join(self.args['model_directory'], self.args['result_file']), "w")
-        for index, item in enumerate(predictions):
-            prediction_scores.append(fix_score(item, self.prompt))
-            label_scores.append(correct_output[index])
-            outfile.write("%f\t%f\n" % (label_scores[-1], prediction_scores[-1]))
-        outfile.close()
+        pred = predictions.cpu().numpy()[0]
+        answ = correct_output[0]
 
-        test_eva_res = evaluation(label_scores, prediction_scores)
-        print("pearson:", float(test_eva_res[7]))
-        print("qwk:", float(test_eva_res[8]))
-        print("test_eva_res: ", test_eva_res) ## HKKO
-        return float(test_eva_res[7]), float(test_eva_res[8])
-
+        return pred, answ
