@@ -5,14 +5,14 @@ of sentences.
 """
 
 from __future__ import print_function, unicode_literals
-import example_helper
+# import example_helper
 import json
 from torchmoji.sentence_tokenizer import SentenceTokenizer
 
 with open('../model/vocabulary.json', 'r') as f:
     vocabulary = json.load(f)
 
-st = SentenceTokenizer(vocabulary, 30)
+st = SentenceTokenizer(vocabulary, 30)  # 30 == max length
 test_sentences = [
     '\u2014 -- \u203c !!\U0001F602',
     'Hello world!',
