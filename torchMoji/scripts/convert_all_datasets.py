@@ -32,7 +32,7 @@ DATASETS = [
     'SS-Youtube',
     ]
 
-DIR = '../data'
+DIR = 'data'
 FILENAME_RAW = 'raw.pickle'
 FILENAME_OWN = 'own_vocab.pickle'
 FILENAME_OUR = 'twitter_vocab.pickle'
@@ -64,13 +64,14 @@ def convert_dataset(filepath, extend_with, vocab):
                                                   extend_with=extend_with)
     pick = format_pickle(dset, tokenized[0], tokenized[1], tokenized[2],
                         dicts[0], dicts[1], dicts[2])
-    with open(filepath, 'w') as f:
+    # with open(filepath, 'w') as f:
+    with open(filepath, 'wb') as f:
         pickle.dump(pick, f)
     cover = coverage(tokenized[2])
 
     print('     done. Coverage: {}'.format(cover))
 
-with open('../model/vocabulary.json', 'r') as f:
+with open('model/vocabulary.json', 'r') as f:
     vocab = json.load(f)
 
 for dset in DATASETS:
@@ -83,9 +84,9 @@ for dset in DATASETS:
 
     with open(PATH_RAW, 'rb') as dataset:
         if IS_PYTHON2:
-            data = pickle.load(dataset)
+            data = pickle.load(dataset, encoding='latin1')  # add encoding
         else:
-            data = pickle.load(dataset, fix_imports=True)
+            data = pickle.load(dataset, fix_imports=True, encoding='latin1')  # add encoding
 
     # Decode data
     try:

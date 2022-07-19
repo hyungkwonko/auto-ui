@@ -28,6 +28,8 @@ with open(VOCAB_PATH, 'r') as f:
 # Load dataset.
 data = load_benchmark(DATASET_PATH, vocab)
 
+print(data)
+
 # Set up model and finetune
 model = torchmoji_transfer(nb_classes, PRETRAINED_PATH)
 print(model)
